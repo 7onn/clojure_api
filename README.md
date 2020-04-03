@@ -11,3 +11,7 @@ run again.
 
 ## How to start the program
 - `lein run` will run the main namespace set at `project.clj`
+
+## Available on docker
+- `docker build -t clojure_api:latest .`
+- `docker run clojure_api:latest`
