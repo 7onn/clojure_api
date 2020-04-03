@@ -6,6 +6,3 @@
   
   (def petStore {"dog" 7, "cat" 5, "goldfish" 10})
   (* (get petStore petType) petAge))
-
-
-(defn _main [] true)
