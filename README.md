@@ -14,4 +14,7 @@ run again.
 
 ## Available on docker
 - `docker build -t clojure_api:latest .`
-- `docker run clojure_api:latest`
+- `docker run -p 8080:8080 clojure_api:latest`
+
+## Http Availability
+- http://localhost:8080/

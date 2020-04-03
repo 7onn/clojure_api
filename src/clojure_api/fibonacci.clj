@@ -1,5 +1,6 @@
 (ns clojure_api.fibonacci
-  (:gen-class))
+  (:gen-class)
+)
 
 (defn fibonacci
   [amount] 
