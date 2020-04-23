@@ -11,6 +11,7 @@
     [ring.middleware.json :refer [wrap-json-response wrap-json-body]]
     [ring.util.response :refer [response]]
   )
+  (:gen-class)
 )
 
 (defn default-res-headers
@@ -85,7 +86,7 @@
 )
 
 (defroutes app-routes
-  (GET "/" [] {:status 200 :body "ok"})
+  (GET "/" [] {:status 200 :body "ok" :headers (default-res-headers)})
   (POST "/webhook" [] webhook)
   (route/not-found "Error, page not found!"))
 
