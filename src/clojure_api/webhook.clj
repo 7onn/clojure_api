@@ -55,8 +55,10 @@
   (def commit (get (get (get body "pull_request") "head") "sha"))
   (def prnumber (get body "number"))
   (def sender (get (get body "sender") "login"))
+  (def action (get body "action"))
   
-  (def responseBody (json/write-str (str "{\"function\": \"gh-pull-request\", \"sender\": \"" sender "\", \"prnumber\": \"" prnumber "\", \"commit\": \"" commit "\"}")))
+  
+  (def responseBody (json/write-str (str "{\"function\": \"gh-pull-request\", \"sender\": \"" sender "\", \"action\": \"" action "\", \"prnumber\": \"" prnumber "\", \"commit\": \"" commit "\"}")))
   (println responseBody)
 
   {
@@ -86,7 +88,7 @@
 )
 
 (defroutes app-routes
-  (GET "/" [] {:status 200 :body "sup" :headers (default-res-headers)})
+  (GET "/" [] {:status 200 :body "you better post" :headers (default-res-headers)})
   (POST "/webhook" [] webhook)
   (route/not-found "Error, page not found!"))
 
