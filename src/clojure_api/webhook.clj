@@ -13,25 +13,79 @@
   )
 )
 
-(defn webhook
-  [req]
-  (def body (json/read-str (slurp (:body req))))
-  ; (println body)
-  (println (get body "ref"))
-  (println (get (get body "sender") "login"))
-
-  {
-    :status 200
-    :body body      
-    :headers
-      { 
-        "Content-Type" "application/json" 
-        "when" (str (java.util.Date.)) 
-      }
+(defn default-res-headers
+  []
+  { 
+    "content-type" "application/json"
+    "when" (str (java.util.Date.))
   }
 )
 
+(defn gh-release
+  [body]
+  (def commit (get body "after"))
+  (def ref (get body "ref"))
+  (def sender (get (get body "sender") "login"))
+  
+  (def responseBody (json/write-str (str "{\"function\": \"gh-release\", \"sender\": \"" sender "\", \"ref\": \"" ref "\" \"commit\": \"" commit "\"}")))
+  (println responseBody)
+  {
+    :status 200
+    :body responseBody
+    :headers (default-res-headers)
+  }
+)
+
+(defn gh-master
+  [body]
+  (def commit (get body "after"))
+  (def sender (get (get body "sender") "login"))
+
+  (def responseBody (json/write-str (str "{\"function\": \"gh-master\", \"sender\": \"" sender "\", \"commit\": \"" commit "\"}")))
+  (println responseBody)
+  {
+    :status 200
+    :body responseBody
+    :headers (default-res-headers)
+  }
+)
+(defn gh-pull-request
+  [body]
+  (def commit (get (get (get body "pull_request") "head") "sha"))
+  (def prnumber (get body "number"))
+  (def sender (get (get body "sender") "login"))
+  
+  (def responseBody (json/write-str (str "{\"function\": \"gh-pull-request\", \"sender\": \"" sender "\", \"prnumber\": \"" prnumber "\", \"commit\": \"" commit "\"}")))
+  (println responseBody)
+
+  {
+    :status 200
+    :headers (default-res-headers)
+    :body responseBody
+  }
+)
+
+(defn webhook
+  [req]
+  (def body (json/read-str (slurp (:body req))))
+
+  (def ref (get body "ref"))
+  (def pull_request (get body "pull_request"))
+
+  (cond
+    (and ref (re-matches #"^refs/tags/v\d{1,2}.\d{1,2}.\d{1,2}$" ref)) (gh-release body)
+    (and ref (re-matches #"^refs/heads/master$" ref)) (gh-master body)
+    (some? pull_request) (gh-pull-request body)
+    :else 
+      {
+        :status 404
+        :headers (default-res-headers)
+      }
+  )
+)
+
 (defroutes app-routes
+  (GET "/" [] {:status 200 :body "ok"})
   (POST "/webhook" [] webhook)
   (route/not-found "Error, page not found!"))
 
