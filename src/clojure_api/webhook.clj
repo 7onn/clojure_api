@@ -86,7 +86,7 @@
 )
 
 (defroutes app-routes
-  (GET "/" [] {:status 200 :body "ok" :headers (default-res-headers)})
+  (GET "/" [] {:status 200 :body "sup" :headers (default-res-headers)})
   (POST "/webhook" [] webhook)
   (route/not-found "Error, page not found!"))
 
