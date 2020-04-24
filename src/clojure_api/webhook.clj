@@ -1,15 +1,11 @@
 (ns clojure_api.webhook
   (:require 
     [org.httpkit.server :as server]
-    [clj-time.core :as t]
     [compojure.core :refer :all]
     [compojure.route :as route]
-    [clojure.pprint :as pp]
     [clojure.string :as str]
     [clojure.data.json :as json]
     [ring.middleware.defaults :refer :all]
-    [ring.middleware.json :refer [wrap-json-response wrap-json-body]]
-    [ring.util.response :refer [response]]
   )
   (:gen-class)
 )
